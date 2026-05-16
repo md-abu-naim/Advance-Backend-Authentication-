@@ -1,5 +1,6 @@
 import express, { type Application, type Request, type Response } from "express"
 import { pool } from "./DB"
+import { userRoute } from "./modules/user/user.route"
 const app: Application = express()
 
 app.use(express.json())
@@ -14,26 +15,8 @@ app.get('/api/', (req: Request, res: Response) => {
 })
 
 
-app.post('/api/users', async (req: Request, res: Response) => {
-    try {
-        const { name, age, email, password } = req.body
 
-        const result = await pool.query(`
-        INSERT INTO users(name, email, password, age) VALUES($1, $2, $3, $4) RETURNING *
-        `, [name, email, password, age])
-
-
-        res.status(201).json({
-            message: "Created Post",
-            data: result.rows[0]
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            message: error.message,
-            error: error
-        })
-    }
-})
+app.use('/api/users', userRoute)
 
 app.get('/api/users', async (req: Request, res: Response) => {
     try {

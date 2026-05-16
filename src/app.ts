@@ -18,118 +18,14 @@ app.get('/api/', (req: Request, res: Response) => {
 
 app.use('/api/users', userRoute)
 
-app.get('/api/users', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(`
-            SELECT * FROM users
-            `)
+app.get('/api/users', userRoute)
 
-        res.status(200).json({
-            success: true,
-            message: "Users retrived successfully",
-            data: result.rows,
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            message: error.message,
-            error: error
-        })
-    }
-})
-
-app.get('/api/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params
-        const result = await pool.query(`
-            SELECT * FROM users WHERE id=$1
-            `, [id])
-
-        if (result.rows?.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: "User not found",
-                data: {},
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "User retrived successfully",
-            data: result.rows[0],
-        })
-
-    } catch (error: any) {
-        res.status(500).json({
-            message: error.message,
-            error: error
-        })
-    }
-})
+app.get('/api/users', userRoute)
 
 
-app.put('/api/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params
-        const { name, password, is_active } = req.body
-        const result = await pool.query(`
-            UPDATE users SET
-             name=COALESCE($1, name),
-              password=COALESCE($2, password),
-               is_active=COALESCE($3, is_active)
+app.put('/api/users', userRoute)
 
-             WHERE id=$4 RETURNING *
-            `, [name, password, is_active, id])
-
-        if (result.rows?.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: "User not found",
-                data: {},
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "User update successfully",
-            data: result.rows[0],
-        })
-
-    } catch (error: any) {
-        res.status(500).json({
-            message: error.message,
-            error: error
-        })
-    }
-})
-
-app.delete('/api/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params
-        const result = await pool.query(`
-            DELETE FROM users WHERE id=$1
-            `, [id])
-
-        if (result.rowCount === 0) {
-            res.status(404).json({
-                success: false,
-                message: "User not found",
-                data: {},
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "User delete successfully",
-            data: result.rows[0],
-        })
-
-    } catch (error: any) {
-        res.status(500).json({
-            message: error.message,
-            error: error
-        })
-    }
-})
+app.delete('/api/users', userRoute)
 
 
 export default app

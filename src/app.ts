@@ -22,7 +22,6 @@ app.get('/api/users', userRoute)
 
 app.get('/api/users', userRoute)
 
-
 app.put('/api/users', userRoute)
 
 app.delete('/api/users', userRoute)

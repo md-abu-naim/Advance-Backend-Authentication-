@@ -7,6 +7,11 @@ const createProfile = async (req: Request, res: Response) => {
 
         const result = await profileService.createProfileIntoDB(req.body)
 
+        res.status(201).json({
+            message: "profile created successfully",
+            data: result.rows[0]
+        })
+
     } catch (error: any) {
         res.status(500).json({
             message: error.message,

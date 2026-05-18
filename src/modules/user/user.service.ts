@@ -16,7 +16,7 @@ const createUserIntoDB = async (payload: IUser) => {
         INSERT INTO users(name, email, password, age) VALUES($1, $2, $3, $4) RETURNING *
         `, [name, email, hassedPassword, age])
 
-        delete result.rows[0].password
+    delete result.rows[0].password
     return result;
 }
 

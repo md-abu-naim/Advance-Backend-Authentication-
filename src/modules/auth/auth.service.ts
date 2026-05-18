@@ -3,14 +3,14 @@ import { pool } from "../../DB"
 import jwt from 'jsonwebtoken'
 import config from "../../config"
 
-const loginUserIntoDB = async(payload: {email: string, password: string}) => {
-    const {email, password} = payload
+const loginUserIntoDB = async (payload: { email: string, password: string }) => {
+    const { email, password } = payload
 
     const userData = await pool.query(`
        SELECT * FROM users WHERE email=$1
         `, [email])
 
-    if(userData.rows.length === 0) {
+    if (userData.rows.length === 0) {
         throw new Error('Invalid Credentials')
     }
 
@@ -18,7 +18,7 @@ const loginUserIntoDB = async(payload: {email: string, password: string}) => {
 
     const matchedPassword = await bcrypt.compare(password, user.password)
 
-    if(matchedPassword){
+    if (matchedPassword) {
         throw new Error('Invalid Credentials')
     }
 
@@ -30,9 +30,9 @@ const loginUserIntoDB = async(payload: {email: string, password: string}) => {
         is_active: user.is_active
     }
 
-    const accessToken = jwt.sign(jwtPayload, config.secret as string, {expiresIn: '1d'})
+    const accessToken = jwt.sign(jwtPayload, config.secret as string, { expiresIn: '1d' })
 
-    return {accessToken}
+    return { accessToken }
 }
 
 export const authService = {
